@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+// model Room {
+//   id        String   @id @default(uuid())
+//   name      String
+//   description String?
+//   color  String? // 👈 ajouté 
+//   ownerId   String
+//   owner     Profile @relation(fields: [ownerId], references: [id])
+
+//   items     Item[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([ownerId])
+// }
+
+// model Item {
+//   id          String   @id @default(uuid())
+//   roomId      String
+//   name        String
+//   price       Float?
+//   purshaseDate        DateTime?
+//   description String?
+
+//   room      Room     @relation(fields: [roomId], references: [id])
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([roomId])
+// }
+
+
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  color       String?
+  ownerId     String   @map("owner_id")
+
+  items       Item[]
+
+  createdAt   DateTime @map("created_at")
+  updatedAt   DateTime @map("updated_at")
+
+  @@index([ownerId])
+  @@map("rooms")
+}
+
+model Item {
+  id           String   @id @default(uuid())
+  roomId       String   @map("room_id")
+  name         String
+  price        Float?
+  purchaseDate DateTime? @map("purchase_date")
+  description  String?
+
+  room         Room     @relation(fields: [roomId], references: [id])
+
+  createdAt    DateTime @map("created_at")
+  updatedAt    DateTime @map("updated_at")
+
+  @@index([roomId])
+  @@map("items")
+}

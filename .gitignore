@@ -1,0 +1,14 @@
+server/node_modules/
+server/.env
+server/dist/
+server/build/
+
+client/node_modules/
+client/.env
+client/dist/
+client/build/
+
+client/*.njsproj
+client/*.sln
+client/*.sw?
+client/NOTES.md
