@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon } from 'lucide-react'
+import { type LucideIcon } from 'lucide-react'
 
 interface TextInputProps {
     label: string
@@ -7,7 +7,7 @@ interface TextInputProps {
     onChange: (value: string) => void
     error?: string
     placeholder?: string
-    IconComponent?: Icon
+    IconComponent?: LucideIcon
     type?: string
 }
 

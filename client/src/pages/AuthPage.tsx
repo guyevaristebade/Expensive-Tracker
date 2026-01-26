@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, User, ArrowRight } from 'lucide-react'
 import { PasswordInput, TextInput } from '../components'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hooks'
 import { message } from 'antd'
 
+type AuthModeType = 'login' | 'register'
+
 export const AuthPage = () => {
-    const { signIn, signUp } = useAuth()
+    const { signIn, signUp, session } = useAuth()
     const navigate = useNavigate()
-    const [authMode, setAuthMode] = useState<'login' | 'register'>('login')
+    const [authMode, setAuthMode] = useState<AuthModeType>('login')
+
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -23,17 +26,17 @@ export const AuthPage = () => {
         agreeTerms: false,
     })
     const [errors, setErrors] = useState<{
-            email? : string;
-            password? : string;
-            displayName? : string;
-            agreeTerms? : string;
-            confirmPassword? : string
+        email?: string
+        password?: string
+        displayName?: string
+        agreeTerms?: string
+        confirmPassword?: string
     }>({
-        email : "",
-        password :  "",
-        displayName : "",
-        agreeTerms : "",
-        confirmPassword : ""
+        email: '',
+        password: '',
+        displayName: '',
+        agreeTerms: '',
+        confirmPassword: '',
     })
 
     // Validation simplifiée
@@ -46,34 +49,25 @@ export const AuthPage = () => {
         const { email, password } = loginData
 
         const newErrors = {} as {
-            email: string;
-            password: string;
+            email: string
+            password: string
         }
 
         if (!loginData.email) newErrors.email = 'Email requis'
         if (!loginData.password) newErrors.password = 'Mot de passe requis'
 
-        
         if (Object.keys(newErrors).length === 0) {
+            const { data, error } = await signIn(email, password)
 
-            const { data , error } = await signIn(email, password)
-            
-            if(data.session){
-                setLoading(true)
-                setTimeout(() => {
-                    setLoading(false)
-                    setSuccessMessage('Connexion réussie! Redirection...')
-                    setLoginData({ email: '', password: '' })
-                    setTimeout(() => setSuccessMessage(''), 2000)
-                }, 1500)
-                navigate("/")
+            if (data.session) {
+                setLoginData({ email: '', password: '' })
+                navigate('/')
             }
 
-            if(error ){
-                if(error.message === "Invalid login credentials")
-                    message.error("Email/password incorrect")
-                else 
-                    message.error(error.message)
+            if (error) {
+                if (error.message === 'Invalid login credentials')
+                    message.error('Email/password incorrect')
+                else message.error(error.message)
 
                 return
             }
@@ -81,61 +75,61 @@ export const AuthPage = () => {
     }
 
     const handleRegister = async (e: React.FormEvent) => {
-        
         e.preventDefault()
 
         const newErrors = {} as {
-            displayName: string;
-            email: string;
-            password: string;
-            confirmPassword: string;
-            agreeTerms: string;
+            displayName: string
+            email: string
+            password: string
+            confirmPassword: string
+            agreeTerms: string
         }
 
-        const {email, displayName, password } = registerData
+        const { email, displayName, password } = registerData
 
-        
-        
-        if (!registerData.displayName) newErrors.displayName = 'Nom complet requis'
+        if (!registerData.displayName)
+            newErrors.displayName = 'Nom complet requis'
         if (!registerData.email) newErrors.email = 'Email requis'
         if (!registerData.password) newErrors.password = 'Mot de passe requis'
         if (!registerData.confirmPassword)
             newErrors.confirmPassword = 'Confirmation requise'
         if (!registerData.agreeTerms)
             newErrors.agreeTerms = 'Vous devez accepter les conditions'
-        
-        
+
         if (Object.keys(newErrors).length === 0) {
-            const {data : session, error } = await signUp(email, password, displayName)
-            
-            if(session){
+            const { data, error } = await signUp(email, password, displayName)
+
+            if (data.user) {
                 setLoading(true)
                 setTimeout(() => {
                     setLoading(false)
                     setSuccessMessage('Inscription réussie! Redirection...')
-                    setRegisterData({
-                        displayName: '',
-                        email: '',
-                        password: '',
-                        confirmPassword: '',
-                        agreeTerms: false,
-                    })
-                    message.success('inscription réussi')
                     setTimeout(() => {
                         setSuccessMessage('')
+                        setRegisterData({
+                            displayName: '',
+                            email: '',
+                            password: '',
+                            confirmPassword: '',
+                            agreeTerms: false,
+                        })
                         setAuthMode('login')
                     }, 2000)
                 }, 1500)
-
+                console.log(data)
+                // message.success('inscription réussi')
             }
 
-            if(error){
+            if (error) {
                 message.error(error.message)
                 return
             }
         } else setErrors(newErrors)
     }
-    
+
+    useEffect(() => {
+        if (session) navigate('/dashboard')
+    }, [navigate, session])
 
     return (
         <div className="min-h-screen bg-linear-to-br from-gray-900 via-green-900 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
@@ -172,7 +166,7 @@ export const AuthPage = () => {
                                 setAuthMode('login')
                                 setErrors({})
                             }}
-                            className={`cursor-pointer flex-1 py-3 px-4 rounded-lg font-semibold transition ${authMode === 'login' ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600 cursor-pointer'}`}
+                            className={`cursor-pointer flex-1 py-3 px-4 rounded-lg font-semibold transition ${authMode === 'login' ? 'bg-linear-to-r from-green-500 to-green-600 text-white' : 'bg-gray-700 text-gray-400 hover:bg-gray-600 cursor-pointer'}`}
                         >
                             Connexion
                         </button>
@@ -287,7 +281,7 @@ export const AuthPage = () => {
                             />
                             <div className="flex items-start gap-3">
                                 <input
-                                    title='agreeTerms'
+                                    title="agreeTerms"
                                     type="checkbox"
                                     checked={registerData.agreeTerms}
                                     onChange={(e) =>
