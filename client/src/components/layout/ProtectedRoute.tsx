@@ -1,12 +1,13 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../../hooks'
 import { DollarSign } from 'lucide-react'
+import type React from 'react'
 
-type ProtectedRouteType = {
+type Props = {
     children: React.ReactNode
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteType> = ({ children }) => {
+export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     const { session, loading } = useAuth()
 
     // Optionnel : éviter le flicker au refresh

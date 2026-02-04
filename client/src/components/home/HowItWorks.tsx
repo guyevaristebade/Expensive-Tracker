@@ -4,7 +4,9 @@ type StepsType = {
     description: string
 }
 
-const STEPS: StepsType[] = [
+import type React from 'react'
+
+const STEPS_DATA: StepsType[] = [
     {
         step: '1',
         title: 'Créez vos catégories',
@@ -25,7 +27,7 @@ const STEPS: StepsType[] = [
     },
 ]
 
-export const HowItWorks = () => {
+export const HowItWorks: React.FC = () => {
     return (
         <section
             id="how"
@@ -43,7 +45,7 @@ export const HowItWorks = () => {
                 </div>
 
                 <div className="grid gap-12 md:grid-cols-3">
-                    {STEPS.map((step) => (
+                    {STEPS_DATA.map((step) => (
                         <div key={step.step} className="relative">
                             <div
                                 className="w-14 h-14 rounded-full flex items-center justify-center

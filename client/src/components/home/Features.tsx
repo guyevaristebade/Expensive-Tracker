@@ -14,7 +14,7 @@ type FeatureType = {
     description: string
 }
 
-const FEATURES: FeatureType[] = [
+const FEATURES_DATA: FeatureType[] = [
     {
         icon: Folder,
         title: 'Catégoriser vos dépenses',
@@ -53,7 +53,7 @@ const FEATURES: FeatureType[] = [
     },
 ]
 
-export const Features = () => {
+export const Features: React.FC = () => {
     return (
         <section id="features" className="py-28 bg-[#F9FAFB]">
             <div className="max-w-7xl mx-auto px-6">
@@ -68,7 +68,7 @@ export const Features = () => {
                 </div>
 
                 <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    {FEATURES.map((feature) => (
+                    {FEATURES_DATA.map((feature) => (
                         <div
                             key={feature.title}
                             className="bg-white p-8 rounded-2xl border border-[#10B981]/10

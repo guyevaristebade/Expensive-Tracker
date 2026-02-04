@@ -1,41 +1,29 @@
+import React, { useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { DashBoardHeader } from '../dashboard/DashBoardHeader'
 import { SideBar } from '../dashboard/SideBar'
-import { useState } from 'react'
+import { useAuth } from '../../hooks'
 
-// export const DashBoardLayout = () => {
-//     const [isOpen, setIsOpen] = useState<boolean>(false);
-
-//     const toggleMenu = () =>{
-//         setIsOpen(!isOpen)
-//     }
-//     return (
-//         <div className="flex h-screen">
-//             {/* Sidebar */}
-//             <SideBar isOpen={isOpen} toggleMenu={toggleMenu}/>
-//             <div className='w-full min-h-screen bg-red-300'>
-//                 {/* Header  */}
-//                 <DashBoardHeader displayName='Jean'/>
-//                 {/* Pages */}
-//                 <div className='p-8 overflow-scroll'>
-//                     <Outlet/>
-//                 </div>
-//             </div>
-//         </div>
-//     )
-// }
-
-export const DashBoardLayout = () => {
+export const DashBoardLayout: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false)
+    const { signOut, session } = useAuth()
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
     }
 
+    const handleLogout = async () => {
+        await signOut()
+    }
+
     return (
         <div className="flex h-screen overflow-hidden w-screen bg-amber-500">
             {/* SIDEBAR */}
-            <SideBar isOpen={isOpen} toggleMenu={toggleMenu} />
+            <SideBar
+                isOpen={isOpen}
+                toggleMenu={toggleMenu}
+                onLogout={handleLogout}
+            />
 
             {/* 
           CONTENU PRINCIPAL
@@ -45,7 +33,11 @@ export const DashBoardLayout = () => {
         */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* HEADER */}
-                <DashBoardHeader displayName="Guy" toggleMenu={toggleMenu} />
+                <DashBoardHeader
+                    displayName="Guy"
+                    toggleMenu={toggleMenu}
+                    lastLogin={session?.user.last_sign_in_at ?? ''}
+                />
 
                 {/* 
             ZONE DE CONTENU

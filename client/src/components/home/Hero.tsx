@@ -7,12 +7,11 @@ import {
 } from 'lucide-react'
 import { Button } from '../ui/Button'
 
-
-type HeroProps = {
+type Props = {
     handleBeginning: () => void
 }
 
-export const Hero: React.FC<HeroProps> = ({ handleBeginning }) => (
+export const Hero: React.FC<Props> = ({ handleBeginning }) => (
     <section className="min-h-[90vh] flex items-center bg-lienar-to-br from-emerald-50 to-orange-50 relative overflow-hidden">
         {/* Éléments décoratifs en arrière-plan */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl"></div>

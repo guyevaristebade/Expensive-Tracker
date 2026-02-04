@@ -1,46 +1,52 @@
-import React from 'react'
+import type React from 'react'
 import { type LucideIcon } from 'lucide-react'
 
-interface TextInputProps {
+type Props = {
     label: string
-    value: string
-    onChange: (value: string) => void
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
     error?: string
     placeholder?: string
     IconComponent?: LucideIcon
     type?: string
+    className?: string
+    name?: string
+    value?: string
 }
 
-export const TextInput: React.FC<TextInputProps> = ({
+export const Input: React.FC<Props> = ({
     label,
-    value,
     onChange,
     error,
     placeholder,
     IconComponent,
     type = 'text',
+    className,
+    name,
+    value,
 }) => {
     return (
         <div>
-            <label className="block text-gray-300 font-medium mb-2">
+            <label className="block text-gray-600 font-medium mb-2">
                 {label}
             </label>
             <div className="relative">
                 {IconComponent && (
                     <IconComponent
                         size={18}
-                        className="absolute left-4 top-3.5 text-gray-500"
+                        className="absolute left-4 top-4 text-gray-500"
                     />
                 )}
                 <input
                     type={type}
-                    value={value}
-                    onChange={(e) => onChange(e.target.value)}
+                    name={name}
+                    defaultValue={value}
+                    // value={value}
+                    onChange={onChange}
                     placeholder={placeholder}
-                    className={`w-full bg-gray-700 border rounded-lg pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none transition ${
+                    className={`w-full ${className} border rounded-lg ${IconComponent ? 'pl-12 pr-4 py-3    ' : 'p-3'} text-gray-900 placeholder-gray-500 focus:outline-none transition ${
                         error
                             ? 'border-red-500 focus:ring-2 focus:ring-red-500'
-                            : 'border-gray-600 focus:border-green-500 focus:ring-2 focus:ring-green-500'
+                            : 'border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-500'
                     }`}
                 />
             </div>

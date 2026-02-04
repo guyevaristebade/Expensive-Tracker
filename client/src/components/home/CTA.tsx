@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../ui/Button'
+import type React from 'react'
 
-export const CTA = () => {
+export const CTA: React.FC = () => {
     const navigate = useNavigate()
 
     const handleGoToHome = () => {

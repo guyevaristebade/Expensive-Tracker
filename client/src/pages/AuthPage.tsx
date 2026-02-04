@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Mail, User, ArrowRight } from 'lucide-react'
-import { PasswordInput, TextInput } from '../components'
+import { Mail, User, ArrowRight, DollarSign } from 'lucide-react'
+import { PasswordInput, Input, Deco } from '../components'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hooks'
-import { message } from 'antd'
-
-type AuthModeType = 'login' | 'register'
+import { useAuth, useToast } from '../hooks'
+import type { AuthModeType } from '../types'
 
 export const AuthPage = () => {
     const { signIn, signUp, session } = useAuth()
+    const { addToast } = useToast()
     const navigate = useNavigate()
     const [authMode, setAuthMode] = useState<AuthModeType>('login')
 
@@ -39,92 +38,153 @@ export const AuthPage = () => {
         confirmPassword: '',
     })
 
-    // Validation simplifiée
-    // const validateEmail = (email: string) =>
-    //     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    const addToastMessage = (
+        description: string,
+        title: string,
+        variant: 'success' | 'error' | 'info' | 'warning'
+    ) => {
+        addToast({ description, title, variant })
+    }
+
+    const handleChangeLoginData = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+
+        setLoginData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const resetLoginForm = () => {
+        setLoginData({ email: '', password: '' })
+        setErrors({})
+    }
+
+    const validateLogin = (): boolean => {
+        const newErrors: typeof errors = {}
+
+        if (!loginData.email) {
+            newErrors.email = 'Email requis'
+        }
+        if (!loginData.password) {
+            newErrors.password = 'Mot de passe requis'
+        }
+
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
+    }
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
 
         const { email, password } = loginData
+        if (!validateLogin()) return
 
-        const newErrors = {} as {
-            email: string
-            password: string
+        setLoading(true)
+
+        const { data, error } = await signIn(email, password)
+
+        if (error) {
+            setLoading(false)
+            addToastMessage(
+                error.message || "Une erreur s'est produite",
+                'Erreur',
+                'error'
+            )
+            return
         }
 
-        if (!loginData.email) newErrors.email = 'Email requis'
-        if (!loginData.password) newErrors.password = 'Mot de passe requis'
+        if (data.user) {
+            setLoading(false)
+            resetLoginForm()
+            navigate('/dashboard')
+        }
+    }
 
-        if (Object.keys(newErrors).length === 0) {
-            const { data, error } = await signIn(email, password)
+    const validateRegister = (): boolean => {
+        const newErrors: typeof errors = {}
 
-            if (data.session) {
-                setLoginData({ email: '', password: '' })
-                navigate('/')
-            }
+        if (!registerData.displayName) {
+            newErrors.displayName = 'Nom requis'
+        }
+        if (!registerData.email) {
+            newErrors.email = 'Email requis'
+        }
+        if (!registerData.password) {
+            newErrors.password = 'Mot de passe requis'
+        }
+        if (!registerData.confirmPassword) {
+            newErrors.confirmPassword = 'Confirmation requise'
+        }
+        if (
+            registerData.password &&
+            registerData.confirmPassword &&
+            registerData.password !== registerData.confirmPassword
+        ) {
+            newErrors.confirmPassword = 'Les mots de passe ne correspondent pas'
+        }
+        if (!registerData.agreeTerms) {
+            newErrors.agreeTerms = 'Veuillez cocher les conditions'
+        }
 
-            if (error) {
-                if (error.message === 'Invalid login credentials')
-                    message.error('Email/password incorrect')
-                else message.error(error.message)
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
+    }
 
-                return
-            }
-        } else setErrors(newErrors)
+    const handleChangeRegisterData = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const { name, value } = e.target
+
+        setRegisterData((prev) => ({
+            ...prev,
+            [name]: value,
+        }))
+    }
+
+    const resetRegisterForm = () => {
+        setRegisterData({
+            displayName: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            agreeTerms: false,
+        })
+        setErrors({})
     }
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        const newErrors = {} as {
-            displayName: string
-            email: string
-            password: string
-            confirmPassword: string
-            agreeTerms: string
+        if (!validateRegister()) return
+
+        setLoading(true)
+
+        const { data, error } = await signUp(
+            registerData.email,
+            registerData.password,
+            registerData.displayName
+        )
+
+        if (error) {
+            setLoading(false)
+            addToastMessage(
+                error.message || "Une erreur s'est produite",
+                'Erreur',
+                'error'
+            )
+            return
         }
 
-        const { email, displayName, password } = registerData
-
-        if (!registerData.displayName)
-            newErrors.displayName = 'Nom complet requis'
-        if (!registerData.email) newErrors.email = 'Email requis'
-        if (!registerData.password) newErrors.password = 'Mot de passe requis'
-        if (!registerData.confirmPassword)
-            newErrors.confirmPassword = 'Confirmation requise'
-        if (!registerData.agreeTerms)
-            newErrors.agreeTerms = 'Vous devez accepter les conditions'
-
-        if (Object.keys(newErrors).length === 0) {
-            const { data, error } = await signUp(email, password, displayName)
-
-            if (data.user) {
-                setLoading(true)
-                setTimeout(() => {
-                    setLoading(false)
-                    setSuccessMessage('Inscription réussie! Redirection...')
-                    setTimeout(() => {
-                        setSuccessMessage('')
-                        setRegisterData({
-                            displayName: '',
-                            email: '',
-                            password: '',
-                            confirmPassword: '',
-                            agreeTerms: false,
-                        })
-                        setAuthMode('login')
-                    }, 2000)
-                }, 1500)
-                console.log(data)
-                // message.success('inscription réussi')
-            }
-
-            if (error) {
-                message.error(error.message)
-                return
-            }
-        } else setErrors(newErrors)
+        if (data.user) {
+            setSuccessMessage('Inscription réussie! Redirection...')
+            await new Promise((resolve) => setTimeout(resolve, 1500))
+            setLoading(false)
+            setSuccessMessage('')
+            resetRegisterForm()
+            await new Promise((resolve) => setTimeout(resolve, 500))
+            setAuthMode('login')
+        }
     }
 
     useEffect(() => {
@@ -132,33 +192,32 @@ export const AuthPage = () => {
     }, [navigate, session])
 
     return (
-        <div className="min-h-screen bg-linear-to-br from-gray-900 via-green-900 to-gray-900 flex items-center justify-center p-4 relative overflow-hidden">
+        <div className="min-h-screen bg-linear-to-br flex items-center justify-center p-4 relative overflow-hidden">
             {/* Décos */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-3xl opacity-10"></div>
-            <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500 rounded-full blur-3xl opacity-10"></div>
+            <Deco />
 
             <div className="relative z-10 w-full max-w-md">
-                <div className="text-center mb-10">
+                <div className="flex flex-col items-center justify-center text-center mb-10">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-green-400 to-green-600 rounded-2xl mb-4 mx-auto text-5xl">
-                        💰
+                        <DollarSign className="text-white" size={32} />
                     </div>
-                    <h1 className="text-4xl font-bold text-white">
-                        Budget Buddy
+                    <h1 className="text-4xl font-bold text-gray-900 text-center">
+                        Expensive Tracker
                     </h1>
-                    <p className="text-gray-400 mt-2">
+                    <p className="text-gray-400 mt-2 text-center">
                         Gérez vos dépenses intelligemment
                     </p>
                 </div>
 
                 {successMessage && (
                     <div className="mb-6 p-4 bg-green-900 border border-green-500 rounded-lg flex items-center gap-3 animate-pulse">
-                        <p className="text-green-300 font-medium">
+                        <p className="-green-300 font-medium">
                             {successMessage}
                         </p>
                     </div>
                 )}
 
-                <div className="bg-gray-800 rounded-2xl shadow-2xl p-8 border border-gray-700">
+                <div className=" rounded-2xl shadow-2xl p-8 border border-gray-300">
                     {/* TABS */}
                     <div className="flex gap-2 mb-8">
                         <button
@@ -183,23 +242,22 @@ export const AuthPage = () => {
 
                     {authMode === 'login' && (
                         <form className="space-y-5" onSubmit={handleLogin}>
-                            <TextInput
+                            <Input
                                 label="Email"
+                                type="email"
+                                name="email"
+                                onChange={handleChangeLoginData}
                                 value={loginData.email}
-                                onChange={(v) =>
-                                    setLoginData({ ...loginData, email: v })
-                                }
                                 error={errors.email}
                                 IconComponent={Mail}
                                 placeholder="vous@exemple.com"
                             />
                             <PasswordInput
                                 label="Mot de passe"
+                                name="password"
                                 value={loginData.password}
-                                onChange={(v) =>
-                                    setLoginData({ ...loginData, password: v })
-                                }
                                 error={errors.password}
+                                onChange={handleChangeLoginData}
                                 showPassword={showPassword}
                                 toggleShowPassword={() =>
                                     setShowPassword(!showPassword)
@@ -221,41 +279,26 @@ export const AuthPage = () => {
 
                     {authMode === 'register' && (
                         <form className="space-y-5" onSubmit={handleRegister}>
-                            <TextInput
+                            <Input
                                 label="Nom complet"
-                                value={registerData.displayName}
-                                onChange={(v) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        displayName: v,
-                                    })
-                                }
+                                onChange={handleChangeRegisterData}
+                                name="displayName"
                                 error={errors.displayName}
                                 IconComponent={User}
                                 placeholder="Jean Dupont"
                             />
-                            <TextInput
+                            <Input
                                 label="Email"
-                                value={registerData.email}
-                                onChange={(v) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        email: v,
-                                    })
-                                }
+                                onChange={handleChangeRegisterData}
+                                name="email"
                                 error={errors.email}
                                 IconComponent={Mail}
                                 placeholder="vous@exemple.com"
                             />
                             <PasswordInput
                                 label="Mot de passe"
-                                value={registerData.password}
-                                onChange={(v) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        password: v,
-                                    })
-                                }
+                                name="password"
+                                onChange={handleChangeRegisterData}
                                 error={errors.password}
                                 showPassword={showPassword}
                                 toggleShowPassword={() =>
@@ -265,13 +308,8 @@ export const AuthPage = () => {
                             />
                             <PasswordInput
                                 label="Confirmer le mot de passe"
-                                value={registerData.confirmPassword}
-                                onChange={(v) =>
-                                    setRegisterData({
-                                        ...registerData,
-                                        confirmPassword: v,
-                                    })
-                                }
+                                name="confirmPassword"
+                                onChange={handleChangeRegisterData}
                                 error={errors.confirmPassword}
                                 showPassword={showConfirmPassword}
                                 toggleShowPassword={() =>
@@ -279,21 +317,27 @@ export const AuthPage = () => {
                                 }
                                 placeholder="Confirmez votre mot de passe"
                             />
-                            <div className="flex items-start gap-3">
+                            <div className="flex  items-center gap-3">
                                 <input
                                     title="agreeTerms"
                                     type="checkbox"
                                     checked={registerData.agreeTerms}
-                                    onChange={(e) =>
-                                        setRegisterData({
-                                            ...registerData,
-                                            agreeTerms: e.target.checked,
-                                        })
+                                    name="agreeTerms"
+                                    onChange={() =>
+                                        setRegisterData((prev) => ({
+                                            ...prev,
+                                            agreeTerms: !prev.agreeTerms,
+                                        }))
                                     }
-                                    className="mt-1 w-5 h-5 bg-gray-700 border border-gray-600 rounded cursor-pointer accent-green-500"
+                                    // onChange={handleChangeRegisterData}
+                                    className={`mt-1 w-5 h-5 bg-gray-700 border border-gray-600 rounded cursor-pointer accent-green-500 ${errors.agreeTerms ? 'focus:ring-2 focus:ring-red-500' : 'focus:ring-2 focus:ring-green-500'}`}
                                 />
-                                <label className="text-gray-400 text-sm">
-                                    J'accepte les conditions
+                                <label
+                                    className={`text-gray-400 text-sm ${errors.agreeTerms ? 'text-red-500' : ''}`}
+                                >
+                                    {errors.agreeTerms
+                                        ? errors.agreeTerms
+                                        : "J'accepte les conditions"}
                                 </label>
                             </div>
                             <button

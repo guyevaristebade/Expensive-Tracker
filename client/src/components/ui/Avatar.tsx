@@ -1,11 +1,11 @@
-import React from 'react'
+import type React from 'react'
 
-type AvatarProps = {
+type Props = {
     displayName: string
     size: 'sm' | 'md' | 'xl'
 }
 
-export const Avatar: React.FC<AvatarProps> = ({ displayName, size }) => {
+export const Avatar: React.FC<Props> = ({ displayName, size }) => {
     const getStyleBySize = (size: string) => {
         switch (size) {
             case 'sm':

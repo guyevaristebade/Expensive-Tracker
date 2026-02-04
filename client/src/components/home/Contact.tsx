@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Mail, Send, CheckCircle, MapPin, Phone } from 'lucide-react'
+import type React from 'react'
 
-export const Contact = () => {
+export const Contact: React.FC = () => {
     const [isSubmitted, setIsSubmitted] = useState(false)
     const [formData, setFormData] = useState({
         name: '',
@@ -10,7 +11,9 @@ export const Contact = () => {
         message: '',
     })
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target
         setFormData((prev) => ({ ...prev, [name]: value }))
     }

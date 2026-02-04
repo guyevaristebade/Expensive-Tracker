@@ -5,8 +5,10 @@ import {
     DashBoardHomePage,
     RoomPage,
     UnKnowPage,
+    RoomDetailsPage,
+    SettingsPage,
 } from '../pages'
-import { DashBoardLayout } from '../components'
+import { DashBoardLayout, ProtectedRoute } from '../components'
 
 const router = createBrowserRouter([
     {
@@ -18,7 +20,11 @@ const router = createBrowserRouter([
         path: 'auth',
     },
     {
-        element: <DashBoardLayout />, // protected route component dans le futur
+        element: (
+            <ProtectedRoute>
+                <DashBoardLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: 'dashboard',
@@ -32,6 +38,20 @@ const router = createBrowserRouter([
                 element: <RoomPage />,
                 handle: {
                     crumb: () => 'rooms',
+                },
+            },
+            {
+                path: 'rooms/:roomId',
+                element: <RoomDetailsPage />,
+                handle: {
+                    crumb: () => 'rooms/:roomId',
+                },
+            },
+            {
+                path: 'settings',
+                element: <SettingsPage />,
+                handle: {
+                    crumb: () => 'settings',
                 },
             },
         ],

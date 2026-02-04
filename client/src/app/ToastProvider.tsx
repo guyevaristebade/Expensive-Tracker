@@ -46,7 +46,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     const removeToast = (id: string) => {
         if (timersRef.current[id]) {
             clearTimeout(timersRef.current[id])
-            delete timersRef.current[id] // on supprime la reférence
+            delete timersRef.current[id] // on supprime la reférence à la  fin
         }
 
         setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id))
@@ -64,7 +64,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 
         const timerId = setTimeout(() => {
             removeToast(id) // remove le toast
-        }, 3000)
+        }, 5000)
 
         timersRef.current[id] = timerId
     }
@@ -106,6 +106,7 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
                             >
                                 <X className="w-5 h-5" />
                             </button>
+                            {/* <div className="absolute left-0 -bottom-px h-2 w-full bg-green-500 rounded-full"></div> */}
                         </div>
                     )
                 })}

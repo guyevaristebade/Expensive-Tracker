@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Button } from '../ui/Button'
 import { Menu, X } from 'lucide-react'
+import type React from 'react'
 
 type Props = {
     isAuthenticated: boolean
@@ -8,7 +9,7 @@ type Props = {
     handleSignIn?: () => void
     handleGoToHome?: () => void
 }
-export const Navbar = ({
+export const Navbar: React.FC<Props> = ({
     isAuthenticated,
     handleSignIn,
     handleTry,
