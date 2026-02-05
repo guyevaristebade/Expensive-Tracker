@@ -1,4 +1,3 @@
-import React from 'react'
 import { CardItem, DashBoardTitle, Input } from '../components'
 import { RoomCardDetail } from '../components/dashboard/rooms/details/RoomDetailCard'
 import { Search, Trash } from 'lucide-react'

@@ -1,5 +1,5 @@
 import React from 'react'
-import type { RoomStatsCardProps } from '../../types'
+import type { RoomStatsCardProps } from '../../../types'
 
 export const RoomStatsCard: React.FC<RoomStatsCardProps> = ({
     title,

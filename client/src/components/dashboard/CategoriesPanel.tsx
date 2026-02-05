@@ -71,6 +71,20 @@ export const CategoriesPanel: React.FC<CategoriesPanelProps> = ({
 
     const handleSubmitItem = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        // Simple validation a enlever après
+        setErrors({
+            name: modalFormData.name ? '' : 'Le nom est requis',
+            price: modalFormData.price ? '' : 'Le prix est requis',
+            purchaseDate: modalFormData.purchaseDate
+                ? ''
+                : "La date d'achat est requise",
+            description: modalFormData.description
+                ? ''
+                : 'La description est requise',
+            roomId: modalFormData.roomId ? '' : 'La pièce est requise',
+            invoice: files.invoice ? '' : 'La facture est requise',
+            photo: files.photo ? '' : 'La photo est requise',
+        })
         console.log('Submitting item:', modalFormData, files)
     }
 
