@@ -1,18 +1,18 @@
 import type { LucideIcon } from 'lucide-react'
+import type { Room } from './dashboard'
 
 export type ModeType = 'create' | 'edit'
 
 export type RoomStatsCardProps = {
     icon: LucideIcon
     title: string
-    value: string
+    value: number
     color?: string
     border?: string
     bg?: string
 }
 
 export type FormDataType = {
-    id?: string
     name: string
     description: string
     color: string
@@ -32,6 +32,8 @@ export type RoomModalProps = {
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     formData: FormDataType
+    errors: CreateRoomError
+    isSubmitting: boolean
 }
 
 export type ApercuProps = {
@@ -41,15 +43,19 @@ export type ApercuProps = {
 }
 
 export type RoomCardProps = {
-    // name: string
-    // description?: string
-    // amount: string
-    // color?: string
-    room: RoomType
-    totalItems?: number
-    updatedAt?: string
+    room: Room
     checked?: boolean
     onDelete?: () => void
     onEdit?: () => void
     onChecked?: () => void
 }
+
+export type CreateRoomError = FormDataType
+
+export type RoomStats = {
+    total_items: number
+    total_price_items: number
+    total_rooms: number
+}
+
+export type FilterType = 'all' | 'most-recent' | 'most-expensive' | 'least-expensive' | 'most-articles'

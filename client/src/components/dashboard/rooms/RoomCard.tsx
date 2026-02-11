@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Edit, Info, Trash } from 'lucide-react'
 import type { RoomCardProps } from '../../../types'
 import { Link } from 'react-router-dom'
+import { parseDate } from '../../../utils'
 
 export const RoomCard: React.FC<RoomCardProps> = ({
     room,
-    totalItems = 0,
-    updatedAt,
     onChecked,
     onDelete,
     onEdit,
@@ -72,7 +71,7 @@ export const RoomCard: React.FC<RoomCardProps> = ({
                         </span>
                         <p className="text-lg font-semibold text-gray-900">
                             {'$'}
-                            {room.amount}
+                            {room.total_price}
                         </p>
                     </div>
 
@@ -81,17 +80,15 @@ export const RoomCard: React.FC<RoomCardProps> = ({
                             Articles
                         </span>
                         <p className="text-lg font-semibold text-gray-900">
-                            {totalItems}
+                            {room.total_items}
                         </p>
                     </div>
                 </div>
 
                 {/* Date */}
-                {updatedAt && (
-                    <p className="text-xs text-gray-400">
-                        Mis à jour le {updatedAt}
-                    </p>
-                )}
+                <p className="text-xs text-gray-400">
+                    Mis à jour le {parseDate(room.updated_at)}
+                </p>
 
                 {/* Actions */}
                 <div className="relative flex gap-4">

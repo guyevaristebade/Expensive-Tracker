@@ -1,17 +1,23 @@
 import { Lightbulb, Trophy } from 'lucide-react'
 import {
-    CategoriesPanel,
     DashBoardTitle,
     ExpenseHighlightCard,
     ExpensePieChart,
     LineChartGraph,
     StatsCard,
 } from '../components'
-import { categories, StatsData } from '../utils'
+import { StatsData } from '../utils'
+import { useDashBoardStats, useRooms } from '../hooks'
 
 export const DashBoardHomePage = () => {
+    const { rooms } = useRooms()
+    const { stats } = useDashBoardStats()
+
+    console.log(stats, ' stats dashboard')
+    console.log(rooms)
+
     return (
-        <div className="min-h-screen w-full flex flex-col gap-10 space-y-10 relative">
+        <div className="min-h-screen w-full flex flex-col gap-10 space-y-10 pb-10 relative">
             <DashBoardTitle
                 title="Tableau de Bord"
                 subtitle="Aperçu de vos dépenses"
@@ -50,7 +56,7 @@ export const DashBoardHomePage = () => {
                     variant="less"
                 />
             </div>
-            <CategoriesPanel categories={categories} />
+            {/* <CategoriesPanel categories={categories} /> */}
         </div>
     )
 }

@@ -1,6 +1,13 @@
 export interface Room {
     id: string
     name: string
+    owner_id: string
+    color: string
+    description: string
+    created_at: string
+    updated_at: string
+    total_price: number
+    total_items: number
 }
 
 export interface Errors {
