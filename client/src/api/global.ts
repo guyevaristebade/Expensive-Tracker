@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { supabase } from '../lib'
 
 export const selectRequest = async (table: string) => {

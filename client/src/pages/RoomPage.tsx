@@ -13,8 +13,7 @@ import type {
     FormDataType,
     ModeType,
     CreateRoomError,
-    Room,
-    FilterType
+    Room
 } from '../types'
 import { useAuth, useRooms, useToast } from '../hooks'
 import { createRoom, deleteMany, deleteRequest, updateRequest } from '../api'
@@ -24,11 +23,11 @@ export const RoomPage = () => {
     const { session } = useAuth()
 
     const [search, setSearch] = useState<string>('')
-    const [filter, setFilter] = useState<FilterType>('all')
+    // const [filter, setFilter] = useState<FilterType>('all')
     const [roomIds, setRoomIds] = useState<string[]>([])
 
     // Le hook useRooms reçoit maintenant le filtre
-    const { rooms, roomStats, loading, refetch } = useRooms(filter)
+    const { rooms, roomStats, loading, refetch } = useRooms()
 
     const [selectedRoomId, setSelectedRoomId] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -218,10 +217,10 @@ export const RoomPage = () => {
     }
 
     // Handle filter change
-    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setFilter(e.target.value as FilterType)
-        console.log(filter)
-    }
+    // const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    //     setFilter(e.target.value as FilterType)
+    //     console.log(filter)
+    // }
 
     // Memoized filtered data based on search input
     const filteredData = useMemo(() => {
@@ -292,7 +291,7 @@ export const RoomPage = () => {
                 />
                 <div className="flex gap-4 items-center flex-wrap">
                     <div className="flex gap-4 items-center flex-wrap">
-                        <select
+                        {/* <select
                             className="border border-gray-300 cursor-pointer rounded-lg px-4 py-2 text-gray-900 placeholder-gray-500 focus:outline-none transition"
                             name="filter"
                             onChange={handleFilterChange}
@@ -306,7 +305,7 @@ export const RoomPage = () => {
                             <option value="most-articles">
                                 Plus d'articles
                             </option>
-                        </select>
+                        </select> */}
                         {roomIds.length > 0 && (
                             <button
                                 className="bg-red-100 py-2 px-4 text-red-700 border border-red-700 hover:bg-red-200 rounded-lg hover:shadow-lg flex items-center gap-2 transition text-sm md:text-base cursor-pointer"

@@ -7,13 +7,10 @@ import {
     StatsCard,
 } from '../components'
 import { StatsData } from '../utils'
-import { useDashBoardStats, useRooms } from '../hooks'
+import { useRooms } from '../hooks'
 
 export const DashBoardHomePage = () => {
     const { rooms } = useRooms()
-    const { stats } = useDashBoardStats()
-
-    console.log(stats, ' stats dashboard')
     console.log(rooms)
 
     return (
