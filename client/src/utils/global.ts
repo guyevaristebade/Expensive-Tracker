@@ -60,3 +60,37 @@ export const parseDate = (date: string) => {
     const newDate = new Date(date)
     return newDate.toUTCString()
 }
+
+/**
+ * Formate un timestamp en format français : "12 janv. 2024"
+ * @param timestamp - String représentant un timestamp (ISO 8601 ou autre format de date)
+ * @returns String formatée au format "DD MMM. YYYY"
+ */
+export const formatDate = (timestamp: string): string => {
+    const date = new Date(timestamp)
+
+    // Vérification que la date est valide
+    if (isNaN(date.getTime())) {
+        return ''
+    }
+
+    const day = date.getDate()
+    const monthNames = [
+        'janv.',
+        'févr.',
+        'mars',
+        'avr.',
+        'mai',
+        'juin',
+        'juil.',
+        'août',
+        'sept.',
+        'oct.',
+        'nov.',
+        'déc.',
+    ]
+    const month = monthNames[date.getMonth()]
+    const year = date.getFullYear()
+
+    return `${day} ${month} ${year}`
+}

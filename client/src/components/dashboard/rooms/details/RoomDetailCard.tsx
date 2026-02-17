@@ -1,23 +1,7 @@
 import clsx from 'clsx'
 import React from 'react'
+import type { RoomCardDetailProps, Variant } from '../../../../types'
 
-// export interface RoomCardDetailProps {
-//     label?: string
-//     amount: number | string
-//     currency?: string
-//     className?: string
-//     labelClassName?: string
-//     amountClassName?: string
-// }
-
-type Variant = 'purple' | 'green' | 'blue' | 'yellow' | 'pink'
-type RoomCardDetailProps = {
-    label?: string
-    amount: number | string
-    currency?: string
-    variant?: Variant
-    description?: string
-}
 
 export const RoomCardDetail: React.FC<RoomCardDetailProps> = ({
     label,

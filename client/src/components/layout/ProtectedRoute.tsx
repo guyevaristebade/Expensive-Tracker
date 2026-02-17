@@ -10,7 +10,6 @@ type Props = {
 export const ProtectedRoute: React.FC<Props> = ({ children }) => {
     const { session, loading } = useAuth()
 
-    // Optionnel : éviter le flicker au refresh
     if (loading) {
         return (
             <div className="animate-pulse flex justify-center items-center h-screen">

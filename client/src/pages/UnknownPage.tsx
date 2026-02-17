@@ -1,7 +1,7 @@
 import { ArrowLeft, Home, Wallet } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-export const UnKnowPage = () => {
+export const UnknownPage = () => {
     const navigate = useNavigate()
 
     return (

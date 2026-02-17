@@ -1,6 +1,13 @@
 import type { LucideIcon } from 'lucide-react'
-import type { Room } from './dashboard'
+import type { RoomItem } from './items'
 
+export type FilterType =
+    | 'all'
+    | 'most-recent'
+    | 'most-expensive'
+    | 'least-expensive'
+    | 'most-articles'
+    
 export type ModeType = 'create' | 'edit'
 
 export type RoomStatsCardProps = {
@@ -12,13 +19,13 @@ export type RoomStatsCardProps = {
     bg?: string
 }
 
-export type FormDataType = {
+export interface FormDataType   {
     name: string
     description: string
     color: string
 }
 
-export type RoomType = {
+export interface  RoomType  {
     id?: string
     name: string
     description: string
@@ -26,7 +33,7 @@ export type RoomType = {
     amount?: string
 }
 
-export type RoomModalProps = {
+export interface RoomModalProps  {
     mode: 'create' | 'edit'
     onClose: () => void
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -52,10 +59,43 @@ export type RoomCardProps = {
 
 export type CreateRoomError = FormDataType
 
-export type RoomStats = {
+export interface RoomStats {
     total_items: number
     total_price_items: number
     total_rooms: number
 }
 
-export type FilterType = 'all' | 'most-recent' | 'most-expensive' | 'least-expensive' | 'most-articles'
+export interface Room {
+    id: string
+    name: string
+    owner_id?: string
+    color: string
+    description: string
+    created_at: string
+    updated_at: string
+    total_price?: number
+    total_items?: number
+    items?: RoomItem[]
+}
+
+export interface RoomDetailStats {
+    room_id: string
+    total_price: number
+    total_items: number
+    avg_price: string
+    most_expensive_item_name: string
+    most_expensive_item_price: number
+    least_expensive_item_name: string
+    least_expensive_item_price: number
+}
+
+
+
+export type Variant = 'purple' | 'green' | 'blue' | 'yellow' | 'pink'
+export interface  RoomCardDetailProps  {
+    label?: string
+    amount: number
+    currency?: string
+    variant?: Variant
+    description?: string
+}

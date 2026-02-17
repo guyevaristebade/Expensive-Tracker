@@ -172,15 +172,19 @@ export const CategoriesPanel: React.FC<CategoriesPanelProps> = ({
                         expenseFormData={modalFormData}
                         errors={errors}
                         onClose={() => setShowCatItemForm(false)}
-                        rooms={[{
-                            name: 'dsfsdfs', id: '1', owner_id: "dddd",
-                            color: '',
-                            description: '',
-                            created_at: '',
-                            updated_at: '',
-                            total_price: 0,
-                            total_items: 0
-                        }]}
+                        rooms={[
+                            {
+                                name: 'dsfsdfs',
+                                id: '1',
+                                owner_id: 'dddd',
+                                color: '',
+                                description: '',
+                                created_at: '',
+                                updated_at: '',
+                                total_price: 0,
+                                total_items: 0,
+                            },
+                        ]}
                         onSubmit={handleSubmitItem}
                     />
                 )}

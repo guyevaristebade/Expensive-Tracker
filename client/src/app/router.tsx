@@ -4,7 +4,7 @@ import {
     HomePage,
     DashBoardHomePage,
     RoomPage,
-    UnKnowPage,
+    UnknownPage,
     RoomDetailsPage,
     SettingsPage,
 } from '../pages'
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
     },
     {
         path: '*',
-        element: <UnKnowPage />,
+        element: <UnknownPage />,
     },
 ])
 

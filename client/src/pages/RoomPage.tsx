@@ -9,12 +9,7 @@ import {
     DashBoardTitle,
     Result,
 } from '../components'
-import type {
-    FormDataType,
-    ModeType,
-    CreateRoomError,
-    Room
-} from '../types'
+import type { FormDataType, ModeType, CreateRoomError, Room } from '../types'
 import { useAuth, useRooms, useToast } from '../hooks'
 import { createRoom, deleteMany, deleteRequest, updateRequest } from '../api'
 
@@ -22,12 +17,14 @@ export const RoomPage = () => {
     const { addToast } = useToast()
     const { session } = useAuth()
 
-    const [search, setSearch] = useState<string>('')
-    // const [filter, setFilter] = useState<FilterType>('all')
     const [roomIds, setRoomIds] = useState<string[]>([])
+    // const [rooms, setRooms] = useState<Room[]>([]);
+    // const [roomStats, setRoomStats] = useState<RoomStats>();
+    
+    const [search, setSearch] = useState<string>('')
 
     // Le hook useRooms reçoit maintenant le filtre
-    const { rooms, roomStats, loading, refetch } = useRooms()
+    const { roomStats, rooms, loading, refetch } = useRooms()
 
     const [selectedRoomId, setSelectedRoomId] = useState('')
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -105,7 +102,6 @@ export const RoomPage = () => {
                     description: 'Pièce créée avec succès',
                     variant: 'success',
                 })
-                setIsSubmitting(false)
                 setIsModalOpen(false)
                 setFormData({
                     name: '',
@@ -119,15 +115,16 @@ export const RoomPage = () => {
                     variant: 'error',
                 })
             }
+            setIsSubmitting(false)
         }
 
         if (modalMode === 'edit') {
+            setIsSubmitting(true)
             const { error } = await updateRequest(
                 'rooms',
                 formData,
                 selectedRoomId
             )
-            setIsSubmitting(true)
 
             if (!error) {
                 addToast({
@@ -136,7 +133,6 @@ export const RoomPage = () => {
                     variant: 'success',
                 })
                 setIsModalOpen(false)
-                setIsSubmitting(false)
                 setFormData({
                     name: '',
                     description: '',
@@ -149,6 +145,7 @@ export const RoomPage = () => {
                     variant: 'error',
                 })
             }
+            setIsSubmitting(false)
         }
 
         await refetch()
@@ -188,7 +185,8 @@ export const RoomPage = () => {
                 description: "Une erreur s'est produite",
             })
         }
-        await refetch()
+
+        await refetch();
     }
 
     const handleDeleteMany = async () => {
@@ -207,7 +205,7 @@ export const RoomPage = () => {
             })
         }
         setRoomIds([])
-        await refetch()
+        await refetch();
     }
 
     // Handle search input changes for filtering rooms
@@ -215,12 +213,6 @@ export const RoomPage = () => {
         const { value } = e.target
         setSearch(value)
     }
-
-    // Handle filter change
-    // const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    //     setFilter(e.target.value as FilterType)
-    //     console.log(filter)
-    // }
 
     // Memoized filtered data based on search input
     const filteredData = useMemo(() => {
