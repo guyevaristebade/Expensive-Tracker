@@ -1,5 +1,11 @@
 import { useEffect, useState } from 'react'
-import { CardItem, DashBoardTitle, Input, Result } from '../components'
+import {
+    CardItem,
+    DashBoardTitle,
+    Input,
+    ProductModal,
+    Result,
+} from '../components'
 import { RoomCardDetail } from '../components/dashboard/rooms/details/RoomDetailCard'
 import { Search } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -10,10 +16,16 @@ import { supabase } from '../lib'
 export const RoomDetailsPage = () => {
     const { roomId } = useParams()
     const navigate = useNavigate()
-    // const { room,fetchRoom, roomDetatilStat, fetchRoomDetailStats } = useRooms();
     const [room, setRoom] = useState<Room>()
     const [roomDetailStat, setRoomDetailStat] = useState<RoomDetailStats>()
     const [loading, setLoading] = useState<boolean>(true)
+    const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [openMode, setOpenMode] = useState<'edit' | 'create'>('create')
+
+    const toggleOpen = () => {
+        setIsOpen(!isOpen)
+        setOpenMode(openMode)
+    }
 
     useEffect(() => {
         const fetchRoom = async () => {
@@ -27,9 +39,10 @@ export const RoomDetailsPage = () => {
 
             setLoading(false)
         }
+
         const fetchRoomDetailStats = async () => {
             setLoading(true)
-            // rajouter error et le gérer plus tard 
+            // rajouter error et le gérer plus tard
             const { data } = await supabase
                 .from('room_detail_stats')
                 .select()
@@ -62,8 +75,8 @@ export const RoomDetailsPage = () => {
                         backgroundColor: room?.color,
                         borderColor: room?.color,
                     }}
-                    className=" text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg flex items-center gap-2 transition text-sm md:text-base cursor-pointer"
-                    onClick={() => alert('création Item ....')}
+                    className="text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg flex items-center gap-2 transition text-sm md:text-base cursor-pointer"
+                    onClick={toggleOpen}
                 >
                     Ajouter un article
                 </button>
@@ -158,12 +171,11 @@ export const RoomDetailsPage = () => {
                 </div>
             </div>
 
-            <div>
-                {/* List of items in the room */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full">
                 {/* <RoomItemsList roomId={roomId} /> */}
                 {room && room.items && room?.items?.length > 0 ? (
                     room.items.map((item) => (
-                        <div className="grid grid-cols-2 gap-4">
+                        <div>
                             <CardItem
                                 key={item.name}
                                 image={
@@ -192,7 +204,7 @@ export const RoomDetailsPage = () => {
                                     borderColor: room?.color,
                                 }}
                                 className=" text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg flex items-center gap-2 transition text-sm md:text-base cursor-pointer"
-                                onClick={() => alert('création Item ....')}
+                                onClick={toggleOpen}
                             >
                                 Ajouter un article
                             </button>
@@ -200,6 +212,14 @@ export const RoomDetailsPage = () => {
                     />
                 )}
             </div>
+
+            {isOpen && (
+                <ProductModal
+                    roomId={roomId as string}
+                    mode={openMode}
+                    onClose={toggleOpen}
+                />
+            )}
         </div>
     )
 }

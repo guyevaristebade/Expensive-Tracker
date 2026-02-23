@@ -5,9 +5,9 @@ export interface RoomItem {
     description: string
     price: number
     purchase_date: string
-    updated_at: string
-    created_at: string
     invoice_url: string
     image_url: string
     owner_id: string
+    updated_at: string
+    created_at: string
 }

@@ -22,7 +22,12 @@
         "noUnusedParameters": true,
         "erasableSyntaxOnly": true,
         "noFallthroughCasesInSwitch": true,
-        "noUncheckedSideEffectImports": true
+        "noUncheckedSideEffectImports": true,
+        "ignoreDeprecations": "6.0", // Ignore deprecation warnings from React 18 types, which are not yet updated to React 19.
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
     },
     "include": ["src", "tailwind.config.ts"]
 }

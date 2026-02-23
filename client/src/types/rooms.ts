@@ -7,7 +7,7 @@ export type FilterType =
     | 'most-expensive'
     | 'least-expensive'
     | 'most-articles'
-    
+
 export type ModeType = 'create' | 'edit'
 
 export type RoomStatsCardProps = {
@@ -19,21 +19,23 @@ export type RoomStatsCardProps = {
     bg?: string
 }
 
-export interface FormDataType   {
+export interface FormDataType {
     name: string
     description: string
     color: string
 }
 
-export interface  RoomType  {
-    id?: string
+export interface Room {
+    id: string
     name: string
     description: string
     color: string
-    amount?: string
+    created_at: string
+    updated_at: string
+    items?: RoomItem[]
 }
 
-export interface RoomModalProps  {
+export interface RoomModalProps {
     mode: 'create' | 'edit'
     onClose: () => void
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
@@ -89,10 +91,8 @@ export interface RoomDetailStats {
     least_expensive_item_price: number
 }
 
-
-
 export type Variant = 'purple' | 'green' | 'blue' | 'yellow' | 'pink'
-export interface  RoomCardDetailProps  {
+export interface RoomCardDetailProps {
     label?: string
     amount: number
     currency?: string

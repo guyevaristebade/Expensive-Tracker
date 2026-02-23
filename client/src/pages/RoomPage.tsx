@@ -17,7 +17,7 @@ export const RoomPage = () => {
     const { addToast } = useToast()
     const { session } = useAuth()
 
-    const [roomIds, setRoomIds] = useState<string[]>([])
+    const [roomIds, setRoomIds] = useState<string[]>([]);
     // const [rooms, setRooms] = useState<Room[]>([]);
     // const [roomStats, setRoomStats] = useState<RoomStats>();
     

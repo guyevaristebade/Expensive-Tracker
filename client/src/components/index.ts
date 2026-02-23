@@ -36,3 +36,5 @@ export { Apercu } from './dashboard/rooms/Apercu'
 // Rooms Details
 export { RoomCardDetail } from './dashboard/rooms/details/RoomDetailCard'
 export { CardItem } from './dashboard/rooms/details/CardItem'
+
+export { ProductModal } from './dashboard/items/ProductModal'

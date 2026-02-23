@@ -3,10 +3,12 @@ import type {
     AuthResponse,
     AuthTokenResponsePassword,
     Session,
+    User,
 } from '@supabase/supabase-js'
 
 type AuthContextType = {
     session: Session | null
+    user: User | null
     isAuthenticated: boolean
     loading: boolean
     signIn: (

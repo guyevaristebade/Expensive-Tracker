@@ -1,9 +1,9 @@
 import { supabase } from '../lib'
-import type { FormDataType } from '../types'
+import type { Room } from '../types'
 
-export type CreateRoomInput = FormDataType & { owner_id?: string }
-
-export const createRoom = async (data: CreateRoomInput) => {
+export const createRoom = async (
+    data: Omit<Room, 'id' | 'created_at' | 'updated_at' | 'items'>
+) => {
     return await supabase.from('rooms').insert(data)
 }
 
@@ -17,6 +17,10 @@ export const getRoomById = async (id: string) => {
     `
         )
         .eq('id', id)
+}
+
+export const getRooms = async () => {
+    return await supabase.from('rooms').select('*')
 }
 
 export const getRoomDetailStats = async (id: string) => {
